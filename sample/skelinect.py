@@ -26,7 +26,8 @@ def doloop():
         results = pose.process(rgb)
         if not results.pose_landmarks:
             continue
-        print(results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_WRIST])
+        print(type(rgb))
+        print(results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_WRIST].x)
 
         mp_drawing.draw_landmarks(rgb, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
 
