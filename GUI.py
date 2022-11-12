@@ -4,22 +4,16 @@ v0.2 - GUI
 Cal Tumminello
 '''
 
-'''
-self.instruList = Listbox(bg='gray')
-        self.instruList.insert(0, "Bongos")
-        self.instruList.insert(1, "Guitar")
-        self.instruList.insert(2, "Theremin")
-        self.instruList.pack()
-        self.instruList
-'''
-
-
 # import tkinter as tk
 import sys
 
 import cv2
 
 from PIL import ImageTk, Image
+
+# Screen sizing
+WIDTH = 800
+HEIGHT = 700
 
 # Changes import based on os 
 if (sys.platform == "linux" or sys.platform == "linux2"):
@@ -34,97 +28,68 @@ elif (sys.platform == 'darwin'):
     from tkinter.ttk import *
 else:
     from enum import Enum
-    from tkinter import Tk, Label, Frame, Toplevel
+    from tkinter import Tk, Label, Frame, Toplevel, Canvas
     import tkinter as tk
+    import tkinter.ttk as ttk
 
 # enumeration for instrument type
-window = Tk()
-
 class Instruments(Enum):
 
     BONGOS = 1
     THERAMIN = 2
     COMPOSER = 3
 
-# toplevel controller for window groups
+# Capture from camera
+feed = 0
+cap = cv2.VideoCapture(feed)
 
-top = Toplevel(bg="black")
-
-
-
-#  window for windows users
-
-class InstrumentWindow(Frame):
-    def __init__(self, instru) -> None:
-        super().__init__()
-
+# Sets up User Interface
+class InstrumentWindow(tk.Tk):
+    def __init__(self, instru=1, master=None):
+        super().__init__(master)
         self.instrument = instru
-        self.instruList = tk.Listbox(bg='gray')
-        bongoBut = tk.Button(text="Bongos", width=10, height=10, fg="white", bg="gray")
-        self.instruList.insert(1, "Bongos")
-        guitarBut = tk.Button(text="Guitar", width=10, height=10, fg="white", bg="gray")
-        self.instruList.insert(2, "Guitar")
-        thereminBut = tk.Button(text="Theremin", width=10, height=10, fg="white", bg="gray")
-        self.instruList.insert(3, "Theremin")
+        # self.geometry(f'{WIDTH}x{HEIGHT}')
+        #canvas = Canvas(master, width=WIDTH, height=HEIGHT)
+
+        # Rows
+        row1 = tk.Label(master, bg='pink', text= ' ').grid(row=0, column=0)
+        row2 = tk.Label(master, bg='light gray', text= ' ').grid(row=1, column=0)
+        row3 = tk.Label(master, bg='pink', text= ' ').grid(row=2, column=0)
+        row4 = tk.Label(master, bg='light gray', text= ' ').grid(row=3, column=0)
+        row5 = tk.Label(master, bg='pink', text= ' ').grid(row=4, column=0)
+
+        # Columns
         
-
-
+        col1 = tk.Label(master, bg='pink', text= ' ').grid(row=0, column=0)
+        col2 = tk.Label(master, bg='light gray', text= ' ').grid(row=0, column=1)
+        col3 = tk.Label(master, bg='pink', text= ' ').grid(row=0, column=2)
+        col4 = tk.Label(master, bg='light gray', text= ' ').grid(row=0, column=3)
+        col5 = tk.Label(master, bg='pink', text= ' ').grid(row=0, column=4)
+        
+        
+        title = tk.Label(master, bg='light gray', text= 'Handstruments', font=("Times New Roman", 25)).grid(row=0, column=2)
+        
+        instruButt = tk.Button(master, text='Instruments', padx=50, pady=20).grid(row=3, column=0)
+    
     def setInstrument(self, instru):
         self.instrument = instru
 
-    def getInstrument(self) -> Instruments:
-        return self.instrument
+    def getInstrument(self):
+        print(f'{self.instrument}')
+        
+
+# function to center screen 
+def screencenter(o):
+    w, h = o.winfo_width(), o.winfo_height()
+    x = int((o.winfo_screenwidth() - w) / 2)
+    y = int((o.winfo_screenheight() - h) / 2)
+    o.geometry(f'{w}x{h}+{x}+{y}')       
 
 
-'''
-----------SHIT I PULLED FROM STACK OVERFLOW TO SHOW CAMERA FEED-----------
-'''
+# Widgets here
+window = InstrumentWindow()
 
-# Create a frame
-
-# Create a label in the frame
-lmain = Label(window)
-lmain.grid()
-
-# Capture from camera
-cap = cv2.VideoCapture(0)
-
-def video_stream():
-    
-    _, frame = cap.read()
-    cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
-    img = Image.fromarray(cv2image)
-    imgtk = ImageTk.PhotoImage(image=img)
-    lmain.imgtk = imgtk
-    lmain.configure(image=imgtk)
-    lmain.after(1, video_stream) 
-
-video_stream()
-'''
--------------------------------------------------------------------------------
-'''
-
-screen = InstrumentWindow(Instruments.BONGOS)
-
-
-
-'''
-Widgets
-'''
-
-title = Label(text="Instruments", foreground="white", background="gray")
-
-# Basic buttons
-startButton = tk.Button(width=10)
-stopButton = tk.Button(width=10)
-recordButton = tk.Button(width=10)
-
-# instruList.pack()
-
-#
-
-
-# instruList.pack()
-
-# User
+#masterFrame.update()
+#screencenter(masterFrame)
+#masterFrame.deiconify()
 window.mainloop()
