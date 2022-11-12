@@ -56,7 +56,7 @@ class Driver:
 			from lib import Bongos
 		elif instrument == 't':
 			from lib import Theremin
-			
+
 	
 	@staticmethod
 	def introduction():
@@ -65,6 +65,7 @@ class Driver:
 
 
 driver = Driver()
+driver.run('realsense')
 
 
 

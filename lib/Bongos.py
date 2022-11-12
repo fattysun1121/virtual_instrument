@@ -23,7 +23,7 @@ class Bongos(Instrument):
 		pass
 
 	# Play bongos
-	def play(self):
+	def play(self, lhand, rhand):
 		hands = self.get_pitch()
 		if hands == 'left':
 			pb.play(self.high_audio)
