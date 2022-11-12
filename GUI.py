@@ -9,7 +9,7 @@ import sys
 
 import cv2
 
-#from PIL import ImageTk, Image
+from PIL import ImageTk, Image
 
 # Changes import based on os 
 if (sys.platform == "linux" or sys.platform == "linux2"):
@@ -24,9 +24,8 @@ elif (sys.platform == 'darwin'):
     from tkinter.ttk import *
 else:
     from enum import Enum
-    from tkinter import *
-    from tkinter import Frame, Toplevel
-    from tkinter.ttk import *
+    from tkinter import Tk, Label, Frame, Toplevel
+    import tkinter as tk
 
 # enumeration for instrument type
 window = Tk()
@@ -37,11 +36,6 @@ class Instruments(Enum):
     THERAMIN = 2
     COMPOSER = 3
 
-
-    
-
-
-
 # toplevel controller for window groups
 
 top = Toplevel(bg="black")
@@ -51,15 +45,17 @@ top = Toplevel(bg="black")
 #  window for windows users
 
 class InstrumentWindow(Frame):
-    def __init__(self, instrumentNum) -> None:
+    def __init__(self, instru) -> None:
         super().__init__()
 
-        self.instrument = Instruments(instrumentNum).name
-        self.instruList = Listbox(bg='gray')
+        self.instrument = instru
+        self.instruList = tk.Listbox(bg='gray')
+        bongoBut = tk.Button(text="Bongos", width=10, height=10, fg="white", bg="gray")
         self.instruList.insert(1, "Bongos")
+        guitarBut = tk.Button(text="Guitar", width=10, height=10, fg="white", bg="gray")
         self.instruList.insert(2, "Guitar")
+        thereminBut = tk.Button(text="Theremin", width=10, height=10, fg="white", bg="gray")
         self.instruList.insert(3, "Theremin")
-        self.instruList.pack()
         
 
     def setInstrument(self, instru):
@@ -69,10 +65,35 @@ class InstrumentWindow(Frame):
         return self.instrument
 
 
+'''
+----------SHIT I PULLED FROM STACK OVERFLOW TO SHOW CAMERA FEED-----------
+'''
 
+# Create a frame
 
+# Create a label in the frame
+lmain = Label(window)
+lmain.grid()
 
-window = InstrumentWindow()
+# Capture from camera
+cap = cv2.VideoCapture(0)
+
+def video_stream():
+    
+    _, frame = cap.read()
+    cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
+    img = Image.fromarray(cv2image)
+    imgtk = ImageTk.PhotoImage(image=img)
+    lmain.imgtk = imgtk
+    lmain.configure(image=imgtk)
+    lmain.after(1, video_stream) 
+
+video_stream()
+'''
+-------------------------------------------------------------------------------
+'''
+
+screen = InstrumentWindow(Instruments.BONGOS)
 
 
 
@@ -83,21 +104,15 @@ Widgets
 title = Label(text="Instruments", foreground="white", background="gray")
 
 # Basic buttons
-startButton = Button(width=10)
-stopButton = Button(width=10)
-recordButton = Button(width=10)
-
-# List box buttons
-# instruList = Listbox(bg='gray')
-# instruList.insert(1, "Bongos")
-# instruList.insert(2, "Guitar")
-# instruList.insert(3, "Theremin")
+startButton = tk.Button(width=10)
+stopButton = tk.Button(width=10)
+recordButton = tk.Button(width=10)
 
 # instruList.pack()
 
 #
 
-title.pack()
+
 # instruList.pack()
 
 # User
