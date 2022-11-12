@@ -47,9 +47,18 @@ top = Toplevel(bg="black", fg="white", )
 
 class InstrumentWindow(Frame):
     def __init__(self) -> None:
-        super().__init__()
+        super().__init__(bg='black')
         self.instrument = None
-        self.
+        self.instruList = Listbox(bg='gray')
+        instruList.insert(1, "Bongos")
+        instruList.insert(2, "Guitar")
+        instruList.insert(3, "Theremin")
+        instruList.pack()
+        
+
+    def setInstrument(instru):
+        instrument = instru
+
 
 
 
