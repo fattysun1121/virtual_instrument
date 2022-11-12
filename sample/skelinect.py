@@ -24,7 +24,10 @@ def doloop():
         # da = np.hstack((d3,rgb))
         
         results = pose.process(rgb)
-        print(results.pose_landmarks)
+        if not results.pose_landmarks:
+            continue
+        print(type(rgb))
+        print(results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_WRIST].x)
 
         mp_drawing.draw_landmarks(rgb, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
 
