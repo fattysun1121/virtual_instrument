@@ -1,6 +1,7 @@
 # Driver class drives the camera, GUI, and FrameProcessor. It gives FrameProcessor the frame, and receives
 # the frame with skeletonization and the hands kinematics
 
+from lib.Bongos import Bongos
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -15,7 +16,7 @@ class Driver:
 	def __init__(self):
 		self.introduction() 
 		self.processor = fp.FrameProcessor()
-
+		self.instruments = {'b': Bongos()}
 
 	# Run the program by the input camera type 
 	def run(self, camera_type):
@@ -38,7 +39,9 @@ class Driver:
 			    color_array = np.asanyarray(color.get_data())
 			    
 
-			    self.processor.process_frame(color_array)
+			    if self.processor.process_frame(color_array) == 0:
+			    	lhand, rhand = self.processor.get_kinematics()
+			    	self.instruments['b'].play(lhand, rhand)
 			    
 			    # Show the final output
 			    cv2.imshow('Output', color_array)
@@ -65,16 +68,7 @@ class Driver:
 					break
 		else:
 			print('Camera not supported!')
-		
- 
-	# Play the instrument based on the passed string arg
-	def play_instrument(self, instrument):
-		if instrument == 'b':
-			from lib import Bongos
-		elif instrument == 't':
-			from lib import Theremin
-		
-
+	
 	
 	@staticmethod
 	def introduction():
