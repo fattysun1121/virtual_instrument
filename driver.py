@@ -4,8 +4,13 @@
 import cv2
 import mediapipe as mp
 import numpy as np
+import pygame
 from lib import FrameProcessor as fp
+from lib import Theremin as th
+import signal
 import sys
+
+keep_running = True
 
 class Driver:
 	def __init__(self):
@@ -15,6 +20,21 @@ class Driver:
 
 	# Run the program by the input camera type 
 	def run(self, camera_type):
+
+		sampleRate = 44100
+		freq = 300
+
+		pygame.mixer.init(sampleRate, -16, 2, 512)
+
+		arr = np.array([4096 * np.sin(2.0 * np.pi * freq * x / sampleRate) for x in range(0, sampleRate)]).astype(np.int16)
+		arr2 = np.c_[arr, arr]
+		sound = pygame.sndarray.make_sound(arr2)
+		sound.play(-1)
+		pygame.time.delay(1000)
+		sound.stop()
+
+		instr = th.Theremin()
+
 		if camera_type == 'realsense':
 			import pyrealsense2.pyrealsense2 as rs
 
@@ -24,7 +44,7 @@ class Driver:
 			config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
 			pipe.start(config)
 
-			while True:
+			while keep_running:
 				# Get BGR frame
 			    frames = pipe.wait_for_frames()
 			    color = frames.get_color_frame()
@@ -46,6 +66,19 @@ class Driver:
 
 		elif camera_type == 'kinect':
 			from freenect import sync_get_depth as get_depth, sync_get_video as get_video
+
+			while keep_running:
+				(depth,_), (rgb,_) = get_depth(), get_video()
+				self.processor.process_frame(rgb)
+
+				cv2.imshow('Output', rgb[:, :, ::-1])
+
+				rhand, lhand = self.processor.get_kinematics()
+
+				instr.play(rhand, lhand)
+
+				if cv2.waitKey(1) == ord('q'):
+					break
 		else:
 			print('Camera not supported!')
 		
@@ -63,8 +96,18 @@ class Driver:
 		print('Virtual Instrument starting.....')
 		print('Please input camera type (realsense or kinect)')
 
+def handler(signum, frame):
+	global keep_running
+	keep_running = False
 
-driver = Driver()
+
+if __name__ == "__main__":
+	if (len(sys.argv) < 2):
+		print("Usage: python driver.py [kinect | realsense]")
+		pass
+	signal.signal(signal.SIGINT, handler)
+	driver = Driver()
+	driver.run(sys.argv[1])
 
 
 
