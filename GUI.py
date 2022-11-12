@@ -29,7 +29,7 @@ window = Tk()
 Widgets
 '''
 
-title = Label(text="Instruments")
+title = Label(text="Instruments", foreground='white', background='gray')
 
 # Basic buttons
 startButton = Button()
@@ -42,7 +42,7 @@ instruList.insert(1, "Bongos")
 instruList.insert(2, "Guitar")
 instruList.insert(3, "Theremin")
 
-# 
+#
 
 title.pack()
 instruList.pack()
