@@ -7,14 +7,18 @@ Cal Tumminello
 # import tkinter as tk
 import sys
 import cv2
-from PIL import ImageTk, Image
+#from PIL import ImageTk, Image
 
 # Changes import based on os 
 if (sys.platform == "linux" or sys.platform == "linux2"):
-    from tk import *
-elif (sys.platform == "win32"):
+    from tk import * 
+elif (sys.platform == "win64"):
+    import tkinter as tk
+elif (sys.platform == 'darwin'):
     import tkinter as tk
 
+
+#  window for windows users
 window = tk.Tk()
 
 '''
