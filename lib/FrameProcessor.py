@@ -26,11 +26,6 @@ class FrameProcessor:
 
     def draw_landmarks(self, frame, results):
         self.mp_drawing.draw_landmarks(frame, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS)
-        
-
-    # Retrieve user's waste height
-    def get_waist_height(self):
-        return
 
     # Retrieve position, velocity, acceleration
     # Returns 2 3x3 matrices structured as:
@@ -38,7 +33,9 @@ class FrameProcessor:
     #    Velocity:      (vx, vy, vz),
     #    Acceleration:  (ax, ay, az))
     def get_kinematics(self, hand="BOTH"):
-        return
+        a1 = [rhand_position, rhand_velocity, rhand_accel]
+        a2 = [lhand_position, lhand_velocity, lhand_accel]
+        return a1, a2
 
     # Processes camera frames
     def process_frame(self, frame):
