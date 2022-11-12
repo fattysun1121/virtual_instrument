@@ -4,6 +4,16 @@ v0.2 - GUI
 Cal Tumminello
 '''
 
+'''
+self.instruList = Listbox(bg='gray')
+        self.instruList.insert(0, "Bongos")
+        self.instruList.insert(1, "Guitar")
+        self.instruList.insert(2, "Theremin")
+        self.instruList.pack()
+        self.instruList
+'''
+
+
 # import tkinter as tk
 import sys
 
@@ -57,6 +67,7 @@ class InstrumentWindow(Frame):
         thereminBut = tk.Button(text="Theremin", width=10, height=10, fg="white", bg="gray")
         self.instruList.insert(3, "Theremin")
         
+
 
     def setInstrument(self, instru):
         self.instrument = instru
