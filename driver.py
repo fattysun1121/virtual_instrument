@@ -50,16 +50,15 @@ class Driver:
 				frames = pipe.wait_for_frames()
 				color = frames.get_color_frame()
 
-				if not color: continue
-
 				color_array = np.asanyarray(color.get_data())
-			    
-
 				self.processor.process_frame(color_array)
-			    
+			
 				# show the final output
 				cv2.imshow('Output', color_array)
-			    
+			
+				rhand, lhand = self.processor.get_kinematics()
+				instr.play(rhand, lhand)
+
 				if cv2.waitKey(1) == ord('q'):
 					break
 
