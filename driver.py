@@ -46,21 +46,22 @@ class Driver:
 
 			while keep_running:
 				# Get BGR frame
-			    frames = pipe.wait_for_frames()
-			    color = frames.get_color_frame()
 
-			    if not color: continue
+				frames = pipe.wait_for_frames()
+				color = frames.get_color_frame()
 
-			    color_array = np.asanyarray(color.get_data())
+				if not color: continue
+
+				color_array = np.asanyarray(color.get_data())
 			    
 
-			    self.processor.process_frame(color_array)
+				self.processor.process_frame(color_array)
 			    
-			    # show the final output
-			    cv2.imshow('Output', color_array)
+				# show the final output
+				cv2.imshow('Output', color_array)
 			    
-			    if cv2.waitKey(1) == ord('q'):
-			        break
+				if cv2.waitKey(1) == ord('q'):
+					break
 
 			pipe.stop()
 
@@ -69,6 +70,7 @@ class Driver:
 
 			while keep_running:
 				(depth,_), (rgb,_) = get_depth(), get_video()
+
 				self.processor.process_frame(rgb)
 
 				cv2.imshow('Output', rgb[:, :, ::-1])
