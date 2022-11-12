@@ -31,9 +31,9 @@ else:
 
 class instruments(Enum):
 
-    BONGOS = 1
-    THERAMIN = 2
-    COMPOSER = 3
+    BONGOS = Enum
+    THERAMIN = Enum
+    COMPOSER = Enum
 
 
     
@@ -51,7 +51,9 @@ top = Toplevel(bg="black")
 class InstrumentWindow(Frame):
     def __init__(self) -> None:
         super().__init__()
-        self.instrument = None
+
+        self.instrument = instruments.BONGOS
+
         self.instruList = Listbox(bg='gray')
         self.instruList.insert(1, "Bongos")
         self.instruList.insert(2, "Guitar")
@@ -59,9 +61,13 @@ class InstrumentWindow(Frame):
         self.instruList.pack()
         
 
-    def setInstrument(instru):
-        instrument = instru
+    def setInstrument(self, instru):
+        self.instrument = instru
+    
+    def getInstrument(self) -> Enum:
+        return self.instrument
 
+    
 
 
 
