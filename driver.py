@@ -4,7 +4,10 @@
 import cv2
 import mediapipe as mp
 import numpy as np
+import pygame
 from lib import FrameProcessor as fp
+from lib import Theremin as th
+from lib import Instrument
 import signal
 import sys
 
@@ -18,6 +21,21 @@ class Driver:
 
 	# Run the program by the input camera type 
 	def run(self, camera_type):
+
+		sampleRate = 44100
+		freq = 300
+
+		pygame.mixer.init(sampleRate, -16, 2, 512)
+
+		arr = np.array([4096 * np.sin(2.0 * np.pi * freq * x / sampleRate) for x in range(0, sampleRate)]).astype(np.int16)
+		arr2 = np.c_[arr, arr]
+		sound = pygame.sndarray.make_sound(arr2)
+		sound.play(-1)
+		pygame.time.delay(1000)
+		sound.stop()
+
+		instr = th.Theremin()
+
 		if camera_type == 'realsense':
 			import pyrealsense2.pyrealsense2 as rs
 
@@ -55,6 +73,10 @@ class Driver:
 				self.processor.process_frame(rgb)
 
 				cv2.imshow('Output', rgb[:, :, ::-1])
+
+				rhand, lhand = self.processor.get_kinematics()
+
+				instr.play(rhand, lhand)
 
 				if cv2.waitKey(1) == ord('q'):
 					break
