@@ -20,14 +20,28 @@ pipe.start(config)
 while True:
     frames = pipe.wait_for_frames()
     color = frames.get_color_frame()
+    width = color.get_width()
+    height = color.get_height()
     color_array = np.asanyarray(color.get_data())
 
-    if not color: continue
+    
 
     # process the RGB frame to get the result
     results = pose.process(color_array)
-    print(results.pose_landmarks)
 
+    if not results.pose_landmarks: continue
+
+    print(
+        f'Left Wrist coordinates: ('
+        f'{results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_WRIST].x * width}, '
+        f'{results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_WRIST].y * height})'
+    )
+
+    print(
+        f'Right Wrist coordinates: ('
+        f'{results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_WRIST].x * width}, '
+        f'{results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_WRIST].y * height})'
+    )
     # draw detected skeleton on the frame
     mp_drawing.draw_landmarks(color_array, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
     
