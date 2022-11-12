@@ -9,7 +9,7 @@ class Instrument:
 	def get_volume(self):
 		pass
 
-	def play_sound(self):
+	def play(self):
 		pass
-	
+
 

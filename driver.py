@@ -5,6 +5,7 @@ import cv2
 import mediapipe as mp
 import numpy as np
 from lib import FrameProcessor as fp
+import sys
 
 class Driver:
 	def __init__(self):
@@ -46,12 +47,16 @@ class Driver:
 		elif camera_type == 'kinect':
 			from freenect import sync_get_depth as get_depth, sync_get_video as get_video
 		else:
-			print('Camera not supported')
+			print('Camera not supported!')
 		
  
 	# Play the instrument based on the passed string arg
 	def play_instrument(self, instrument):
-		pass
+		if instrument == 'b':
+			from lib import Bongos
+		elif instrument == 't':
+			from lib import Theremin
+			
 	
 	@staticmethod
 	def introduction():
@@ -60,7 +65,7 @@ class Driver:
 
 
 driver = Driver()
-driver.run('realsense')
+
 
 
 
