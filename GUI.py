@@ -20,9 +20,11 @@ elif (sys.platform == "win64"):
 elif (sys.platform == 'darwin'):
     from tkinter import *
     from tkinter.ttk import *
+    from enum import Enum
 else:
     from tkinter import *
-    from tkinter.ttk import *    from tkinter import Toplevel
+    from tkinter.ttk import *    
+    from tkinter import Toplevel
     from enum import Enum
     from tkinter import Frame
 # enumeration for instrument type
@@ -40,20 +42,21 @@ class instruments(Enum):
 
 # toplevel controller for window groups
 
-top = Toplevel(bg="black", fg="white", )
+top = Toplevel(bg="black")
+
 
 
 #  window for windows users
 
 class InstrumentWindow(Frame):
     def __init__(self) -> None:
-        super().__init__(bg='black')
+        super().__init__()
         self.instrument = None
         self.instruList = Listbox(bg='gray')
-        instruList.insert(1, "Bongos")
-        instruList.insert(2, "Guitar")
-        instruList.insert(3, "Theremin")
-        instruList.pack()
+        self.instruList.insert(1, "Bongos")
+        self.instruList.insert(2, "Guitar")
+        self.instruList.insert(3, "Theremin")
+        self.instruList.pack()
         
 
     def setInstrument(instru):
@@ -63,7 +66,7 @@ class InstrumentWindow(Frame):
 
 
 
-window = Tk()
+window = InstrumentWindow()
 
 
 
@@ -79,17 +82,17 @@ stopButton = Button()
 recordButton = Button()
 
 # List box buttons
-instruList = Listbox(bg='gray')
-instruList.insert(1, "Bongos")
-instruList.insert(2, "Guitar")
-instruList.insert(3, "Theremin")
+# instruList = Listbox(bg='gray')
+# instruList.insert(1, "Bongos")
+# instruList.insert(2, "Guitar")
+# instruList.insert(3, "Theremin")
 
-instruList.pack()
+# instruList.pack()
 
 # 
 
 title.pack()
-instruList.pack()
+# instruList.pack()
 
 # User
 window.mainloop()
