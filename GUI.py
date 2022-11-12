@@ -30,42 +30,65 @@ elif (sys.platform == "win64"):
     from tkinter.ttk import *
 elif (sys.platform == 'darwin'):
     from enum import Enum
-    from tkinter import *
-    from tkinter.ttk import *
+    import tkinter as tk
+    import tkinter.ttk as ttk
 else:
     from enum import Enum
     from tkinter import Tk, Label, Frame, Toplevel
     import tkinter as tk
 
-# enumeration for instrument type
-window = Tk()
 
+
+
+
+'''
+
+Defines the Classes we will use, 
+
+CLASSES: 
+
+Instruments - Enumeration for the types of instruments they will use
+
+InstrumentWindow - 
+
+'''
+
+
+# enumeration for instrument type
 class Instruments(Enum):
 
     BONGOS = 1
     THERAMIN = 2
     COMPOSER = 3
 
-# toplevel controller for window groups
 
-top = Toplevel(bg="black")
-
+class InstrumentWindow(tk.Tk):
 
 
-#  window for windows users
-
-class InstrumentWindow(Frame):
-    def __init__(self, instru) -> None:
+    def __init__(self) -> None:
         super().__init__()
+        self.instrument = Instruments.BONGOS
 
-        self.instrument = instru
-        self.instruList = tk.Listbox(bg='gray')
-        bongoBut = tk.Button(text="Bongos", width=10, height=10, fg="white", bg="gray")
-        self.instruList.insert(1, "Bongos")
-        guitarBut = tk.Button(text="Guitar", width=10, height=10, fg="white", bg="gray")
-        self.instruList.insert(2, "Guitar")
-        thereminBut = tk.Button(text="Theremin", width=10, height=10, fg="white", bg="gray")
-        self.instruList.insert(3, "Theremin")
+        
+        self.Btn_list = []
+
+        # self.instruList = tk.Listbox(bg='gray')
+        bongoBut = tk.Button(text="Bongos", width=10, height=5, fg="white", bg="gray")
+        bongoBut.grid(row=0,column=0)
+        self.Btn_list.append(bongoBut)
+
+        # self.instruList.insert(1, "Bongos")
+        guitarBut = tk.Button(text="Guitar", width=10, height=5, fg="white", bg="gray")
+        guitarBut.grid(row=1,column=0)
+        self.Btn_list.append(bongoBut)
+
+        # self.instruList.insert(2, "Guitar")
+        thereminBut = tk.Button(text="Theremin", width=10, height=5, fg="white", bg="gray")
+        thereminBut.grid(row=2, column=0)
+        self.Btn_list.append(bongoBut)
+
+        self.setGrid(5)
+        # self.instruList.insert(3, "Theremin")
         
 
 
@@ -75,15 +98,75 @@ class InstrumentWindow(Frame):
     def getInstrument(self) -> Instruments:
         return self.instrument
 
+    def setGrid(self, factor):
+        x = 0
+        y = 0
+
+        label1 = tk.Button(text="Bongos", width=10, height=5, fg="white", bg="gray")
+        label2 = tk.Button(text="Bongos", width=10, height=5, fg="white", bg="gray")
+        label3 = tk.Button(text="Bongos", width=10, height=5, fg="white", bg="gray")
+        label4 = tk.Button(text="Bongos", width=10, height=5, fg="white", bg="gray")
+        label5 = tk.Button(text="Bongos", width=10, height=5, fg="white", bg="gray")
+        label6 = tk.Button(text="Bongos", width=10, height=5, fg="white", bg="gray")
+        label7 = tk.Button(text="Bongos", width=10, height=5, fg="white", bg="gray")
+        label8 = tk.Button(text="Bongos", width=10, height=5, fg="white", bg="gray")
+        label9 = tk.Button(text="Bongos", width=10, height=5, fg="white", bg="gray")
+        label10 = tk.Button(text="Bongos", width=10, height=5, fg="white", bg="gray")
+
+        label1.grid(row=0, column=0)
+        label2.grid(row=1,column=0)
+        label3.grid(row=2, column=0)
+        label4.grid(row=3,column=0)
+        label5.grid(row=4, column=0)
+
+
+        label6.grid(row=0,column=0)
+        label7.grid(row=0, column=1)
+        label8.grid(row=0,column=2)
+        label9.grid(row=0, column=3)
+        label10.grid(row=0,column=4)
+
+
+
+
+        '''
+        while x < factor:
+
+            label.grid(row=x,column=0)
+
+            while y < factor:
+
+                label.grid(row=0,column=y)
+
+                label = tk.Label(text=" ", bg="gray")
+                y = y +1
+        x = x + 1
+        '''
+
+
+
+# Creates the Window for instruments, master window for all calculations
+
+window = InstrumentWindow()
+
+
+
+
+WINDOW_HEIGHT = window.winfo_height()
+
+WINDOW_WIDTH = window.winfo_width()
+
+
+
 
 '''
 ----------SHIT I PULLED FROM STACK OVERFLOW TO SHOW CAMERA FEED-----------
-'''
+
 
 # Create a frame
 
 # Create a label in the frame
-lmain = Label(window)
+lmain = tk.Label(window)
 lmain.grid()
 
 # Capture from camera
@@ -101,10 +184,12 @@ def video_stream():
 
 video_stream()
 '''
+
+'''
 -------------------------------------------------------------------------------
 '''
 
-screen = InstrumentWindow(Instruments.BONGOS)
+screen = InstrumentWindow()
 
 
 
@@ -112,7 +197,7 @@ screen = InstrumentWindow(Instruments.BONGOS)
 Widgets
 '''
 
-title = Label(text="Instruments", foreground="white", background="gray")
+title = tk.Label(text="Instruments", foreground="white", background="gray")
 
 # Basic buttons
 startButton = tk.Button(width=10)
