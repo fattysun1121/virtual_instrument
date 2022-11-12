@@ -40,14 +40,46 @@ class FrameProcessor:
     def get_kinematics(self, hand="BOTH"):
         return
 
-    # 
+    # Processes camera frames
     def process_frame(self, frame):
+
+        # Calculate delta t
+        self.dt = time.time() - t0
         results = pose.process(rgb)
+
+        # -1 indicates failure
         if not results.pose_landmarks:
             return -1
+
         rhand_position_new = results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_WRIST]
         lhand_position_new = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_WRIST]
 
+        # Calculate right hand kinematics
+        rhand_velocity_new = [0, 0, 0]
+        rhand_velocity_new = (rhand_position_new.x - self.rhand_position[0]) / self.dt
+        rhand_velocity_new = (rhand_position_new.y - self.rhand_position[1]) / self.dt
+        rhand_velocity_new = (rhand_position_new.z - self.rhand_position[2]) / self.dt
+
+        self.rhand_accel[0] = (rhand_velocity_new[0] - self.rhand_velocity[0]) /self.dt
+        self.rhand_accel[1] = (rhand_velocity_new[1] - self.rhand_velocity[1]) /self.dt
+        self.rhand_accel[2] = (rhand_velocity_new[2] - self.rhand_velocity[2]) /self.dt
+
+        self.rhand_velocity = rhand_velocity_new
+        self.rhand_position = rhand_position_new
+
+        # Calculate left hand kinematics
+        lhand_velocity_new = [0, 0, 0]
+        lhand_velocity_new = (lhand_position_new.x - self.lhand_position[0]) / self.dt
+        lhand_velocity_new = (lhand_position_new.y - self.lhand_position[1]) / self.dt
+        lhand_velocity_new = (lhand_position_new.z - self.lhand_position[2]) / self.dt
+
+        self.lhand_accel[0] = (lhand_velocity_new[0] - self.lhand_velocity[0]) /self.dt
+        self.lhand_accel[1] = (lhand_velocity_new[1] - self.lhand_velocity[1]) /self.dt
+        self.lhand_accel[2] = (lhand_velocity_new[2] - self.lhand_velocity[2]) /self.dt
+
+        self.lhand_velocity = lhand_velocity_new
+        self.lhand_position = lhand_position_new
+
+        # Draw skeleton on frame after processing
         self.draw_landmarks(frame)
-
-
+        return 0
