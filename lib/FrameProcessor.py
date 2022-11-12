@@ -44,42 +44,52 @@ class FrameProcessor:
     def process_frame(self, frame):
 
         # Calculate delta t
-        dt = time.time() - self.t0
+        t1 = time.time()
+        dt = t1 - self.t0
+        self.t0 = t1
         results = self.pose.process(frame)
 
         # -1 indicates failure
         if not results.pose_landmarks:
             return -1
 
-        rhand_position_new = results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.RIGHT_WRIST]
-        lhand_position_new = results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.LEFT_WRIST]
+        # Get new positions of right hand and left hand
+        rhand_new_px = results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.RIGHT_WRIST].x
+        rhand_new_py = results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.RIGHT_WRIST].y
+        rhand_new_pz = results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.RIGHT_WRIST].z
+
+        lhand_new_px = results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.LEFT_WRIST].x
+        lhand_new_py = results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.LEFT_WRIST].y
+        lhand_new_pz = results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.LEFT_WRIST].z
+
 
         # Calculate right hand kinematics
         rhand_velocity_new = [0, 0, 0]
-        rhand_velocity_new = (rhand_position_new.x - self.rhand_position[0]) / dt
-        rhand_velocity_new = (rhand_position_new.y - self.rhand_position[1]) / dt
-        rhand_velocity_new = (rhand_position_new.z - self.rhand_position[2]) / dt
+        rhand_velocity_new[0] = (rhand_new_px - self.rhand_position[0]) / dt
+        rhand_velocity_new[1] = (rhand_new_py - self.rhand_position[1]) / dt
+        rhand_velocity_new[2] = (rhand_new_pz - self.rhand_position[2]) / dt
 
         self.rhand_accel[0] = (rhand_velocity_new[0] - self.rhand_velocity[0]) /dt
         self.rhand_accel[1] = (rhand_velocity_new[1] - self.rhand_velocity[1]) /dt
         self.rhand_accel[2] = (rhand_velocity_new[2] - self.rhand_velocity[2]) /dt
 
         self.rhand_velocity = rhand_velocity_new
-        self.rhand_position = rhand_position_new
+        self.rhand_position = [rhand_new_px, rhand_new_py, rhand_new_pz]
 
         # Calculate left hand kinematics
         lhand_velocity_new = [0, 0, 0]
-        lhand_velocity_new = (lhand_position_new.x - self.lhand_position[0]) / dt
-        lhand_velocity_new = (lhand_position_new.y - self.lhand_position[1]) / dt
-        lhand_velocity_new = (lhand_position_new.z - self.lhand_position[2]) / dt
+        lhand_velocity_new[0] = (lhand_new_px - self.lhand_position[0]) / dt
+        lhand_velocity_new[1] = (lhand_new_py - self.lhand_position[1]) / dt
+        lhand_velocity_new[2] = (lhand_new_pz - self.lhand_position[2]) / dt
 
         self.lhand_accel[0] = (lhand_velocity_new[0] - self.lhand_velocity[0]) / dt
         self.lhand_accel[1] = (lhand_velocity_new[1] - self.lhand_velocity[1]) / dt
         self.lhand_accel[2] = (lhand_velocity_new[2] - self.lhand_velocity[2]) / dt
 
         self.lhand_velocity = lhand_velocity_new
-        self.lhand_position = lhand_position_new
+        self.lhand_position = [lhand_new_px, lhand_new_py, lhand_new_pz]
 
         # Draw skeleton on frame after processing
         self.draw_landmarks(frame, results)
+
         return 0
