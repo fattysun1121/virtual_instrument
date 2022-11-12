@@ -4,6 +4,16 @@ v0.2 - GUI
 Cal Tumminello
 '''
 
+'''
+self.instruList = Listbox(bg='gray')
+        self.instruList.insert(0, "Bongos")
+        self.instruList.insert(1, "Guitar")
+        self.instruList.insert(2, "Theremin")
+        self.instruList.pack()
+        self.instruList
+'''
+
+
 # import tkinter as tk
 import sys
 
@@ -29,11 +39,11 @@ else:
     from tkinter import Frame
 # enumeration for instrument type
 
-class instruments(Enum):
+class Instruments(Enum):
 
     BONGOS = Enum
     THERAMIN = Enum
-    COMPOSER = Enum
+    GUITAR = Enum
 
 
     
@@ -51,20 +61,16 @@ top = Toplevel(bg="black")
 class InstrumentWindow(Frame):
     def __init__(self) -> None:
         super().__init__()
-
-        self.instrument = instruments.BONGOS
-
-        self.instruList = Listbox(bg='gray')
-        self.instruList.insert(1, "Bongos")
-        self.instruList.insert(2, "Guitar")
-        self.instruList.insert(3, "Theremin")
-        self.instruList.pack()
         
+        self.instrument = Instruments.BONGOS
+
+        
+
 
     def setInstrument(self, instru):
         self.instrument = instru
     
-    def getInstrument(self) -> Enum:
+    def getInstrument(self) -> Instruments:
         return self.instrument
 
     
