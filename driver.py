@@ -7,7 +7,6 @@ import numpy as np
 import pygame
 from lib import FrameProcessor as fp
 from lib import Theremin as th
-from lib import Instrument
 import signal
 import sys
 
@@ -81,12 +80,16 @@ class Driver:
 				if cv2.waitKey(1) == ord('q'):
 					break
 		else:
-			print('Camera not supported')
+			print('Camera not supported!')
 		
  
 	# Play the instrument based on the passed string arg
 	def play_instrument(self, instrument):
-		pass
+		if instrument == 'b':
+			from lib import Bongos
+		elif instrument == 't':
+			from lib import Theremin
+			
 	
 	@staticmethod
 	def introduction():
@@ -97,6 +100,7 @@ def handler(signum, frame):
 	global keep_running
 	keep_running = False
 
+
 if __name__ == "__main__":
 	if (len(sys.argv) < 2):
 		print("Usage: python driver.py [kinect | realsense]")
@@ -104,6 +108,7 @@ if __name__ == "__main__":
 	signal.signal(signal.SIGINT, handler)
 	driver = Driver()
 	driver.run(sys.argv[1])
+
 
 
 
