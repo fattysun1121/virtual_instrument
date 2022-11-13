@@ -50,6 +50,7 @@ class Driver:
 
 	def run(self, camera_type, instrument):
 		lmain = self.lmain
+
 		if camera_type == 'realsense':
 			import pyrealsense2.pyrealsense2 as rs
 
@@ -58,20 +59,14 @@ class Driver:
 			config = rs.config()
 			config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 60)
 			self.pipe.start(config)
-			# Repeat after an interval to capture continiously
-			self.show_feed(instrument)
-			
-
+		
+			self.update_frame_r(instrument)
 		elif camera_type == 'kinect':
-			from freenect import sync_get_depth as get_depth, sync_get_video as get_video
-
 			self.update_frame_k(instrument)
-			
-
 		else:
 			print('Camera not supported!')
 	
-	def show_feed(self, instrument):
+	def update_frame_r(self, instrument):
 		lmain = self.lmain
 		frames = self.pipe.wait_for_frames()
 		color = frames.get_color_frame()
@@ -88,16 +83,14 @@ class Driver:
 		imgtk = ImageTk.PhotoImage(image = img)
 		lmain.imgtk = imgtk
 		lmain.configure(image=imgtk)
-		lmain.after(17, lambda : self.show_feed(instrument))
+		lmain.after(17, lambda : self.update_frame_r(instrument))
 
 	def update_frame_k(self, instrument):
+		from freenect import sync_get_depth as get_depth, sync_get_video as get_video
 		lmain = self.lmain
 		(depth,_), (rgb,_) = get_depth(), get_video()
 
 		self.processor.process_frame(rgb)
-
-		cv2.imshow('Output', rgb[:, :, ::-1])
-
 		lhand, rhand = self.processor.get_kinematics()
 
 		self.instruments[instrument].play(lhand, rhand)
@@ -111,7 +104,6 @@ class Driver:
 		lmain.configure(image=imgtk)
 		lmain.after(17, lambda : self.update_frame_k(instrument))
 
-
 	
 	@staticmethod
 	def introduction():
@@ -122,10 +114,10 @@ def handler(signum, frame):
 	global keep_running
 	keep_running = False
 
-
-d = Driver()
-d.run('realsense', 'b')
-d.root.mainloop()
+if __name__ == '__main__':
+	d = Driver()
+	d.run('realsense', 'b')
+	d.root.mainloop()
 
 
 
