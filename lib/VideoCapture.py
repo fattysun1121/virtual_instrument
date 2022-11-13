@@ -3,44 +3,17 @@ from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
 import numpy as np
-'''
-key = cv2.waitKey(1)
-webcam = cv2.VideoCapture(0)
-def Life_feed():
-    while True:
-        try:
-            check, frame = webcam.read()
-            cv2.imshow("Capturing", frame)
-            key = cv2.waitKey(1)
-            if key == ord('s'):
-                cv2.imwrite(filename='saved_img.jpg', img=frame)
-                webcam.release()
-                img_new = cv2.imread('saved_img.jpg', cv2.IMREAD_COLOR)
-                img_new = cv2.imshow("Captured Image", img_new)
-                cv2.waitKey(1650)
-                cv2.destroyAllWindows()
-                print("Processing image...")
-                img_ = cv2.imread('saved_img.jpg', cv2.IMREAD_ANYCOLOR)
-                print("Image saved!")
-                break
-            elif key == ord('q'):
-                print("Turning off camera.")
-                webcam.release()
-                print("Camera off.")
-                print("Program ended.")
-                cv2.destroyAllWindows()
-                break
-        except(KeyboardInterrupt):
-            print("Turning off camera.")
-            webcam.release()
-            print("Camera off.")
-            print("Program ended.")
-            cv2.destroyAllWindows()
-            break
-'''
+import pyrealsense2.pyrealsense2 as rs
+
+
 
 root = Tk()
 root.title("Camera Feed")
+
+pipe = rs.pipeline()
+config = rs.config()
+config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
+pipe.start(config)
 
 cap = cv2.VideoCapture(0)
 
@@ -54,8 +27,12 @@ lmain.grid(row=0, column=2)
 
 # Define function to show frame
 def show_feed():
+    frames = pipe.wait_for_frames()
+    color = frames.get_color_frame()
     # Get the latest frame and convert into Image
-    cv2image= cv2.cvtColor(cap.read()[1],cv2.COLOR_BGR2RGB)
+    color_array = np.asanyarray(color.get_data())
+    cv2image= cv2.cvtColor(color_array, cv2.COLOR_BGR2RGB)
+
     img = Image.fromarray(cv2image)
 
     # Convert image to PhotoImage
