@@ -2,9 +2,12 @@
 v0.2 - GUI
 
 Cal Tumminello
+
+Elliot Hipski
 '''
 
-# import tkinter as tk
+
+import tkinter as tk
 import sys
 from tkinter import OptionMenu, StringVar
 
@@ -12,6 +15,8 @@ import cv2
 
 from PIL import ImageTk, Image
 
+
+'''
 # Screen sizing
 WIDTH = 800
 HEIGHT = 700
@@ -48,30 +53,31 @@ else:
 
 '''
 
-Defines the Classes we will use, 
+# Defines the Classes we will use, 
 
-CLASSES: 
+# CLASSES: 
 
-Instruments - Enumeration for the types of instruments they will use
+# Instruments - Enumeration for the types of instruments they will use
 
-InstrumentWindow - 
-
-'''
-
-
-
-
-
+# InstrumentWindow - 
 
 '''
 
-Defines the Classes we will use, 
 
-CLASSES: 
 
-Instruments - Enumeration for the types of instruments they will use
 
-InstrumentWindow - 
+
+
+'''
+
+#Defines the Classes we will use, 
+
+#CLASSES: 
+
+# Instruments - Enumeration for the types of instruments they will use
+
+
+#InstrumentWindow - 
 
 '''
 
@@ -132,11 +138,9 @@ class InstrumentWindow(tk.Tk):
         self.instrument = instru
         print(self.getInstrument())
 
-<<<<<<< HEAD
     def getInstrument(self):
         print(f'{self.instrument}')
         return f'{self.instrument}'
-=======
     def get_instrument(self) -> Instruments:
         self.instrument
     
@@ -172,7 +176,6 @@ class InstrumentWindow(tk.Tk):
             self.bongoButton = None
             self.guitarButton = None
             self.thereminButton = None
->>>>>>> e1db31680f6d1eb26e2e38b0a546c055cb943c24
 
 
 
@@ -212,7 +215,9 @@ def screencenter(o):
     window.geometry("600x600")
 
 
-'''
+
+
+
 -------------------------------------------------------------------------------
 '''
 
@@ -244,5 +249,31 @@ def video_stream():
 
 video_stream()
 '''
+'''
 window = InstrumentWindow()
 window.mainloop()
+'''
+
+root = tk.Tk()
+
+WINDOW_HEIGHT = root.winfo_height()
+WINDOW_WIDTH = root.winfo_width()
+
+def setGrid(grid_factor):
+    x = -1
+    y = -1
+
+    label = tk.Label(root, height=WINDOW_HEIGHT/grid_factor, width=WINDOW_WIDTH/grid_factor)
+    while x < grid_factor:
+        x = x + 1
+        label.grid(row=x, column=0)
+        while y < grid_factor:
+            y = y + 1
+            label.grid(row=0, column=y)
+
+setGrid(5)
+
+root.mainloop()
+
+
+
