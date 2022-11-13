@@ -40,6 +40,7 @@ else:
     from tkinter import Tk, Label, Frame, Toplevel, Canvas
     import tkinter as tk
     import tkinter.ttk as ttk
+    
 
 
 
@@ -91,9 +92,7 @@ class InstrumentWindow(tk.Tk):
     def __init__(self, instru=1, master=None):
         super().__init__()
         self.instrument = instru
-        # self.geometry(f'{WIDTH}x{HEIGHT}')
-        #canvas = Canvas(master, width=WIDTH, height=HEIGHT)
-
+        
         self.dropBool = False
 
         self.bongoButton = None
@@ -101,33 +100,79 @@ class InstrumentWindow(tk.Tk):
         self.thereminButton = None
 
         # Rows
-        self.row1 = tk.Label(master, bg='pink', text= ' ', height=int(self.winfo_height() / 30), width=int(self.winfo_width() / 20)).grid(row=0, column=0)
-        self.row2 = tk.Label(master, bg='light gray', text= ' ', height=int(self.winfo_height() / 30), width=int(self.winfo_width() / 20)).grid(row=1, column=0)
-        self.row3 = tk.Label(master, bg='pink', text= ' ', height=int(self.winfo_height() / 30), width=int(self.winfo_width() / 20)).grid(row=2, column=0)
-        self.row4 = tk.Label(master, bg='light gray', text= ' ', height=int(self.winfo_height() / 30), width=int(self.winfo_width() / 20)).grid(row=3, column=0)
-        self.row5 = tk.Label(master, bg='pink', text= ' ', height=int(self.winfo_height() / 30), width=int(self.winfo_width() / 20)).grid(row=4, column=0)
+
+        row1 = tk.Label(master, bg='pink', text= ' ').grid(row=0, column=0)
+        row2 = tk.Label(master, bg='light gray', text= ' ').grid(row=1, column=0)
+        row3 = tk.Label(master, bg='pink', text= ' ').grid(row=2, column=0)
+        row4 = tk.Label(master, bg='light gray', text= ' ').grid(row=3, column=0)
+        row5 = tk.Label(master, bg='pink', text= ' ').grid(row=4, column=0)
 
         # Columns
         
-        self.col1 = tk.Label(master, bg='pink', text= ' ', height=int(self.winfo_height() / 20), width=int(self.winfo_width() / 20)).grid(row=0, column=0)
+        self.col1 = tk.Label(master, bg='pink', text= ' ', justify='left', height=int(self.winfo_height() / 20), width=int(self.winfo_width() / 20)).grid(row=0, column=0)
         self.col2 = tk.Label(master, bg='light gray', text= ' ', height=int(self.winfo_height() / 20), width=int(self.winfo_width() / 20)).grid(row=0, column=1)
         self.col3 = tk.Label(master, bg='pink', text= ' ', height=int(self.winfo_height() / 20), width=int(self.winfo_width() / 20)).grid(row=0, column=2)
         self.col4 = tk.Label(master, bg='light gray', text= ' ', height=int(self.winfo_height() / 20), width=int(self.winfo_width() / 20)).grid(row=0, column=3)
         self.col5 = tk.Label(master, bg='pink', text= ' ', height=int(self.winfo_height() / 20), width=int(self.winfo_width() / 40)).grid(row=0, column=4)
         
-        
+        # Other UI Widgets 
+
         self.title = tk.Label(master, bg='light gray', text= 'Handstruments', font=("Times New Roman", 25)).grid(row=0, column=2)
         
         
         
+        # instruButt = tk.Checkbutton(master, text='Instruments', padx=50, pady=20).grid(row=3, column=0)
+
+        cam_btn = tk.Button(master, activebackground="gray", bg='light gray', text="Cam Feed", font=("Times New Roman", 25), command=self.camera_feed).grid(row=4, column=0)
+
+        quit_btn = tk.Button
+    def set_instrument(self, instru):
     
     def setInstrument(self, instru):
         self.instrument = instru
         print(self.getInstrument())
 
+<<<<<<< HEAD
     def getInstrument(self):
         print(f'{self.instrument}')
         return f'{self.instrument}'
+=======
+    def get_instrument(self) -> Instruments:
+        self.instrument
+    
+    def instrument_dropdown(self, master):
+        instruMenu = tk.Label(master, bg='light gray', text='', font=("Times New Roman", 25)).grid(row=0, column=2)
+
+    def camera_feed(self):
+        root = Tk()
+
+        # Create a frame
+        app = tk.Frame(root, bg="white")
+        # Create a label in the frame
+        lmain = Label(app)
+        # Capture from camera
+        cap = cv2.VideoCapture(feed)
+
+        _, frame = cap.read()
+        cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
+        img = Image.fromarray(cv2image)
+        imgtk = ImageTk.PhotoImage(image=img)
+        lmain.imgtk = imgtk
+        lmain.configure(image=imgtk)
+        lmain.after(1, camera_feed) 
+
+    
+    def dropDown(self):
+
+        if self.dropBool == False:
+            self.bongoButton = tk.Button(master=self, bg="pink",text='Bongos', padx=25, pady=20).grid(row=3, column=1)
+            self.guitarButton = tk.Button(master=self, bg='pink', text='Guitar', padx=25, pady=20).grid(row=4, column=1)
+            self.thereminButton = tk.Button(master=self, bg='pink', text='Theremin', padx=25, pady=20).grid(row=5, column=1)
+        else:
+            self.bongoButton = None
+            self.guitarButton = None
+            self.thereminButton = None
+>>>>>>> e1db31680f6d1eb26e2e38b0a546c055cb943c24
 
 
 
@@ -167,9 +212,37 @@ def screencenter(o):
     window.geometry("600x600")
 
 
-# Widgets here
+'''
+-------------------------------------------------------------------------------
+'''
 
-#masterFrame.update()
-screencenter(window)
-#masterFrame.deiconify()
+'''
+Video Streaming Widget
+'''
+'''
+# Other Widgets here
+root = Tk()
+# Create a frame
+app = Frame(root, bg="white")
+app.grid()
+# Create a label in the frame
+lmain = Label(app)
+lmain.grid()
+
+# Capture from camera
+cap = cv2.VideoCapture(0)
+
+# function for video streaming
+def video_stream():
+    _, frame = cap.read()
+    cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
+    img = Image.fromarray(cv2image)
+    imgtk = ImageTk.PhotoImage(image=img)
+    lmain.imgtk = imgtk
+    lmain.configure(image=imgtk)
+    lmain.after(1, video_stream) 
+
+video_stream()
+'''
+window = InstrumentWindow()
 window.mainloop()
