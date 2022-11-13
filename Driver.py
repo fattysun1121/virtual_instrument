@@ -16,22 +16,15 @@ import pygame
 import signal
 import sys
 
-# tkinter
-from tkinter import *
-from tkinter import ttk
-from PIL import Image, ImageTk
-
-keep_running = True
 
 class Driver:
 	def __init__(self, image_holder):
-		self.introduction() 
 		self.processor = fp.FrameProcessor()
-		self.instruments = {'b': Bongos(), 't': Theremin()}	
+		self.instruments = {'bongos': Bongos(), 'theremin': Theremin()}	
+		# Image_holder for each frame
 		self.image_holder = image_holder
 
-	# Run the program by the input camera type 
-
+	# Run the program by the input camera type and instrument
 	def run(self, camera_type, instrument):
 		if camera_type == 'realsense':
 			import pyrealsense2.pyrealsense2 as rs
@@ -80,38 +73,3 @@ class Driver:
 		self.image_holder.imgtk = imgtk
 		self.image_holder.configure(image=imgtk)
 		self.image_holder.after(17, lambda : self.update_frame_k(instrument))
-
-	
-	@staticmethod
-	def introduction():
-		print('Virtual Instrument starting.....')
-		print('Please input camera type (realsense or kinect)')
-
-def handler(signum, frame):
-	global keep_running
-	keep_running = False
-
-
-if __name__ == '__main__':
-	root = Tk()
-	root.title("Camera Feed")
-	#Graphics window
-	image_frame = ttk.Frame(root, width=600, height=500)
-	image_frame.grid(row=0, column=0, padx=10, pady=2)
-
-	#Capture video frames
-	image_holder = ttk.Label(image_frame)
-	image_holder.grid(row=0, column=2)
-
-	# Quit buttom
-	quit_btn = ttk.Button(root, text="Quit", command=root.destroy).grid(row=1, column=2, stick=S)
-
-
-	d = Driver(image_holder)
-	d.run('realsense', 'b')
-	root.mainloop()
-
-
-
-
-
