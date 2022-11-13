@@ -20,7 +20,7 @@ camera_choice = StringVar()
 camera_choice.set(camera_type_list[0])
 
 instrument_choice = StringVar()
-instrument_choice.set(camera_type_list[0])
+instrument_choice.set(instrument_type_list[0])
 
 
 camera_menu = ttk.Combobox(root, value=camera_type_list, textvariable=camera_choice)
@@ -47,7 +47,7 @@ root.rowconfigure(2, weight=1)
 root.rowconfigure(3, weight=1)
 root.rowconfigure(4, weight=1)
 
-run_button = ttk.Button(root, text="Run", command=lambda : run(camera_choice, instrument_choice)).grid(column=1, row=2, sticky=(E, W))
+run_button = ttk.Button(root, text="Run", command=lambda : run(camera_choice.get(), instrument_choice.get())).grid(column=1, row=2, sticky=(E, W))
 
 
 # Bongos and theremin image setup
@@ -60,21 +60,30 @@ theremin_label = Label(root, image=theremin_picture, width=100, height=100)
 bongos_label.grid(row=5, column=0, sticky=(E))
 theremin_label.grid(row=5,column=2, sticky=(W))
 
-ttk.Button(root, text="Quit", command=root.destroy).grid(row=6, column=1, stick=S)
+ttk.Button(root, text="Quit", command=lambda : quit).grid(row=6, column=1, stick=S)
+
+def quit():
+    
+    root.destroy()
+
 
 def run(camera, instrument):
-    # Frame to hold the image label
-    image_frame = ttk.Frame(root, width=600, height=500)
-    image_frame.grid(row=5, column=1, padx=10, pady=2)
+    if driver and hasattr(driver, 'pipe'):
+        driver.pipe.stop()
+    if driver:
+        driver.run(camera, instrument)
 
-    # Label to hold the image
-    image_holder = ttk.Label(image_frame)
-    image_holder.grid(row=0, column=1)
 
-    # Initiate and run driver 
-    driver = Driver(image_holder)
-    driver.run(camera, instrument)
+# Frame to hold the image label
+image_frame = ttk.Frame(root, width=600, height=500)
+image_frame.grid(row=5, column=1, padx=10, pady=2)
 
+# Label to hold the image
+image_holder = ttk.Label(image_frame)
+image_holder.grid(row=0, column=1)
+
+# Initiate and run driver 
+driver = Driver(image_holder)
 
 root.mainloop()
 

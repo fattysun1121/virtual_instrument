@@ -16,11 +16,14 @@ import pygame
 import signal
 import sys
 
+from PIL import ImageTk, Image
+
+
 
 class Driver:
 	def __init__(self, image_holder):
 		self.processor = fp.FrameProcessor()
-		self.instruments = {'bongos': Bongos(), 'theremin': Theremin()}	
+		self.instruments = {'Bongos': Bongos(), 'Theremin': Theremin()}	
 		# Image_holder for each frame
 		self.image_holder = image_holder
 
