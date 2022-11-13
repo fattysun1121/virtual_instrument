@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from tkinter import *
 from tkinter import ttk 
 from Driver import Driver
