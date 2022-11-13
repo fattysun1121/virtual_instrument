@@ -1,12 +1,18 @@
 # Driver class drives the camera, GUI, and FrameProcessor. It gives FrameProcessor the frame, and receives
 # the frame with skeletonization and the hands kinematics
 
+# Local libraries
 from lib.Bongos import Bongos
+from lib.Theremin import Theremin
+from lib import FrameProcessor as fp
+
+# Image processing
 import cv2
 import mediapipe as mp
 import numpy as np
+
+# Theremin dependencies
 import pygame
-from lib import FrameProcessor as fp
 import signal
 import sys
 
@@ -16,7 +22,7 @@ class Driver:
 	def __init__(self):
 		self.introduction() 
 		self.processor = fp.FrameProcessor()
-		self.instruments = {'b': Bongos()}
+		self.instruments = {'b': Bongos(), 't': Theremin()}
 
 	# Run the program by the input camera type 
 	def run(self, camera_type):
@@ -28,7 +34,6 @@ class Driver:
 			config = rs.config()
 			config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
 			pipe.start(config)
-
 			while keep_running:
 				# Get BGR frame
 			    frames = pipe.wait_for_frames()
