@@ -1,13 +1,15 @@
 from .Instrument import Instrument
 import numpy as np
-import pygame
+from pysinewave import SineWave
 import math
 
 class Theremin():
     def __init__(self):
-        self.pitch_rod_x = 0.3
-        self.pitch_rod_z = -0.7
+        self.pitch_rod_x = 0.1
+        self.pitch_rod_z = -0.8
         self.vol_rod_y   = 0.8
+        self.sinewave = SineWave(pitch = 0, pitch_per_second = 50, decibels_per_second=50)
+        self.sinewave.play()
     
     def get_pitch(self, lhand, rhand):
         pass
@@ -19,18 +21,26 @@ class Theremin():
         pass
 
     def play(self, rhand, lhand):
-        pitch_scale = self.__calc_pitch_linear_distance(rhand[0][0], rhand[0][2])
-        dy = (self.vol_rod_y - rhand[0][1])
-        print(f"Pitch scale: {pitch_scale:.3f}\tVol: {dy:.3f}")
+        freq_scale = (math.exp(-1 * (10 / 3) * self.__calc_pitch_linear_distance(rhand[0][0], rhand[0][2])))
+        dy = 100 * (self.vol_rod_y - lhand[0][1])
+        if dy <= 0:
+            self.sinewave.stop()
+            return
+        else:
+            self.sinewave.play()
+        print(f"X: {pitch_scale:.3f}\tLeft Hand y: {dy:.3f}")
 
-        sampleRate = 44100
-        freq = 300 * pitch_scale
+        self.sinewave.set_pitch(800 * freq_scale)
+        self.sinewave.set_volume(dy)
 
-        pygame.mixer.init(sampleRate, -16, 2, 512)
+        # sampleRate = 44100
+        # freq = 300 * pitch_scale
 
-        arr = np.array([(4096 * dy * 5) * np.sin(2.0 * np.pi * freq * x / sampleRate) for x in range(0, sampleRate)]).astype(np.int16) 
-        arr2 = np.c_[arr, arr]
-        sound = pygame.sndarray.make_sound(arr2)
-        sound.play(-1)
-        pygame.time.delay(100)
-        sound.stop()
+        # pygame.mixer.init(sampleRate, -16, 2, 512)
+
+        # arr = np.array([(4096 * dy * 5) * np.sin(2.0 * np.pi * freq * x / sampleRate) for x in range(0, sampleRate)]).astype(np.int16) 
+        # arr2 = np.c_[arr, arr]
+        # sound = pygame.sndarray.make_sound(arr2)
+        # sound.play(-1)
+        # pygame.time.delay(100)
+        # sound.stop()

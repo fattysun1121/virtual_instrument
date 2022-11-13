@@ -21,18 +21,6 @@ class Driver:
 	# Run the program by the input camera type 
 	def run(self, camera_type):
 
-		sampleRate = 44100
-		freq = 300
-
-		pygame.mixer.init(sampleRate, -16, 2, 512)
-
-		arr = np.array([4096 * np.sin(2.0 * np.pi * freq * x / sampleRate) for x in range(0, sampleRate)]).astype(np.int16)
-		arr2 = np.c_[arr, arr]
-		sound = pygame.sndarray.make_sound(arr2)
-		sound.play(-1)
-		pygame.time.delay(1000)
-		sound.stop()
-
 		instr = th.Theremin()
 
 		if camera_type == 'realsense':
@@ -106,10 +94,10 @@ def handler(signum, frame):
 if __name__ == "__main__":
 	if (len(sys.argv) < 2):
 		print("Usage: python driver.py [kinect | realsense]")
-		pass
-	signal.signal(signal.SIGINT, handler)
-	driver = Driver()
-	driver.run(sys.argv[1])
+	else:
+		signal.signal(signal.SIGINT, handler)
+		driver = Driver()
+		driver.run(sys.argv[1])
 
 
 
