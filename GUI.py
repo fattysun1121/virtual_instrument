@@ -16,6 +16,14 @@ from PIL import ImageTk, Image
 WIDTH = 800
 HEIGHT = 700
 
+menuBool = False
+
+bongoButton = None
+guitarButton = None
+thereminButon = None
+
+
+
 # Changes import based on os 
 if (sys.platform == "linux" or sys.platform == "linux2"):
     from tk import * 
@@ -72,9 +80,9 @@ InstrumentWindow -
 
 class Instruments(Enum):
 
-    BONGOS = 1
-    THERAMIN = 2
-    COMPOSER = 3
+    BONGOS = "Bongos"
+    THERAMIN = "Theremin"
+    GUITAR = "Guitar"
 
 # toplevel controller for window groups
 
@@ -87,6 +95,10 @@ class InstrumentWindow(tk.Tk):
         #canvas = Canvas(master, width=WIDTH, height=HEIGHT)
 
         self.dropBool = False
+
+        self.bongoButton = None
+        self.guitarButton = None
+        self.thereminButton = None
 
         # Rows
         self.row1 = tk.Label(master, bg='pink', text= ' ', height=int(self.winfo_height() / 30), width=int(self.winfo_width() / 20)).grid(row=0, column=0)
@@ -106,25 +118,16 @@ class InstrumentWindow(tk.Tk):
         
         self.title = tk.Label(master, bg='light gray', text= 'Handstruments', font=("Times New Roman", 25)).grid(row=0, column=2)
         
-        self.instruButt = tk.Button(master, text="instruments", bg='pink', padx=25, pady=20).grid(row=3,column=0)
+        
         
     
     def setInstrument(self, instru):
         self.instrument = instru
+        print(self.getInstrument())
 
     def getInstrument(self):
         print(f'{self.instrument}')
-    
-    def dropDown(self):
-
-        if self.dropBool == False:
-            self.bongoButton = tk.Button(master=self, bg="pink",text='Bongos', padx=25, pady=20).grid(row=3, column=1)
-            self.guitarButton = tk.Button(master=self, bg='pink', text='Guitar', padx=25, pady=20).grid(row=4, column=1)
-            self.thereminButton = tk.Button(master=self, bg='pink', text='Theremin', padx=25, pady=20).grid(row=5, column=1)
-        else:
-            self.bongoButton = None
-            self.guitarButton = None
-            self.thereminButton = None
+        return f'{self.instrument}'
 
 
 
@@ -132,6 +135,20 @@ class InstrumentWindow(tk.Tk):
 
 
 window = InstrumentWindow()
+
+def dropMenu():
+
+    if menuBool == False:
+        bongoButton = tk.Button(master=window, bg="pink",text='Bongos', padx=25, pady=20, command=lambda : window.setInstrument(Instruments.BONGOS)).grid(row=3, column=1)
+        guitarButton = tk.Button(master=window, bg='pink', text='Guitar', padx=25, pady=20, command=lambda : window.setInstrument(Instruments.GUITAR)).grid(row=4, column=1)
+        thereminButton = tk.Button(master=window, bg='pink', text='Theremin', padx=25, pady=20, command=lambda : window.setInstrument(Instruments.THERAMIN)).grid(row=5, column=1)
+    else:
+        bongoButton = None
+        guitarButton = None
+        thereminButon = None
+
+instruButt = tk.Button(window, text="instruments", bg='pink', padx=25, pady=20, command=dropMenu).grid(row=3,column=0)
+
 
 clicked = StringVar()
 
@@ -147,6 +164,7 @@ def screencenter(o):
     x = int((o.winfo_screenwidth() - w) / 2)
     y = int((o.winfo_screenheight() - h) / 2)
     o.geometry(f'{w}x{h}+{x}+{y}')       
+    window.geometry("600x600")
 
 
 # Widgets here
