@@ -19,7 +19,6 @@ import sys
 from PIL import ImageTk, Image
 
 
-
 class Driver:
 	def __init__(self, image_holder):
 		self.processor = fp.FrameProcessor()

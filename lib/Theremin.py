@@ -11,7 +11,6 @@ class Theremin():
         self.vol_rod_y   = 0.8
         self.sinewave = SineWave(pitch = 0, pitch_per_second = 10, decibels_per_second=10)
      
-
     def __calc_pitch_linear_distance(self, x, z):
         return math.sqrt(math.pow((x - self.pitch_rod_x), 2) + math.pow((z - self.pitch_rod_z), 2))
         
@@ -23,8 +22,6 @@ class Theremin():
             return
         else:
             self.sinewave.play()
-
-        print(f"X: {freq_scale:.3f}\tLeft Hand y: {dy:.3f}")
 
         self.sinewave.set_frequency(1500 * freq_scale)
         self.sinewave.set_volume(dy)
