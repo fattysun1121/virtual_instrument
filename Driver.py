@@ -1,4 +1,4 @@
-# Driver class drives the camera, GUI, and FrameProcessor. It gives FrameProcessor the frame, and receives
+# Driver class drives the camera, the instruments, and FrameProcessor. It gives FrameProcessor the frame, and receives
 # the frame with skeletonization and the hands kinematics
 
 # Local libraries
@@ -25,7 +25,7 @@ class Driver:
 		self.instruments = {'b': Bongos(), 't': Theremin()}
 
 	# Run the program by the input camera type 
-	def run(self, camera_type):
+	def run(self, camera_type, instrument):
 		if camera_type == 'realsense':
 			import pyrealsense2.pyrealsense2 as rs
 
@@ -46,7 +46,7 @@ class Driver:
 
 			    if self.processor.process_frame(color_array) == 0:
 			    	lhand, rhand = self.processor.get_kinematics()
-			    	self.instruments['b'].play(lhand, rhand)
+			    	self.instruments[instrument].play(lhand, rhand)
 			    
 			    # Show the final output
 			    cv2.imshow('Output', color_array)
@@ -65,9 +65,9 @@ class Driver:
 
 				cv2.imshow('Output', rgb[:, :, ::-1])
 
-				rhand, lhand = self.processor.get_kinematics()
+				lhand, rhand = self.processor.get_kinematics()
 
-				instr.play(rhand, lhand)
+				self.instruments[instrument].play(lhand, rhand)
 
 				if cv2.waitKey(1) == ord('q'):
 					break
