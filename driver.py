@@ -45,15 +45,15 @@ class Driver:
 				
 
 
-			    if self.processor.process_frame(color_array) == 0:
-			    	lhand, rhand = self.processor.get_kinematics()
-			    	self.instruments['b'].play(lhand, rhand)
+				if self.processor.process_frame(color_array) == 0:
+					lhand, rhand = self.processor.get_kinematics()
+					self.instruments['b'].play(lhand, rhand)
 			    
 			    # Show the final output
-			    cv2.imshow('Output', color_array)
+				cv2.imshow('Output', color_array)
 			    
-			    if cv2.waitKey(1) == ord('q'):
-			        break
+				if cv2.waitKey(1) == ord('q'):
+					break
 
 
 			pipe.stop()
@@ -64,13 +64,11 @@ class Driver:
 			while keep_running:
 				(depth,_), (rgb,_) = get_depth(), get_video()
 
-				self.processor.process_frame(rgb)
+				if self.processor.process_frame(rgb) == 0:
+					lhand, rhand = self.processor.get_kinematics()
+					self.instruments['t'].play(lhand, rhand)
 
 				cv2.imshow('Output', rgb[:, :, ::-1])
-
-				rhand, lhand = self.processor.get_kinematics()
-
-				instr.play(rhand, lhand)
 
 				if cv2.waitKey(1) == ord('q'):
 					break
