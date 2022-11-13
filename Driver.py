@@ -91,19 +91,22 @@ class Driver:
 		lmain.after(17, lambda : self.show_feed(instrument))
 
 	def update_frame_k(self, instrument):
+		from freenect import sync_get_depth as get_depth, sync_get_video as get_video
+
+
 		lmain = self.lmain
 		(depth,_), (rgb,_) = get_depth(), get_video()
 
 		self.processor.process_frame(rgb)
 
-		cv2.imshow('Output', rgb[:, :, ::-1])
+		# cv2.imshow('Output', rgb[:, :, ::-1])
 
 		lhand, rhand = self.processor.get_kinematics()
 
 		self.instruments[instrument].play(lhand, rhand)
-		cv2image= cv2.cvtColor(rgb, cv2.COLOR_BGR2RGB)
+		# cv2image= cv2.cvtColor(rgb, cv2.COLOR_BGR2RGB)
 
-		img = Image.fromarray(cv2image)
+		img = Image.fromarray(rgb)
 
 		# Convert image to PhotoImage
 		imgtk = ImageTk.PhotoImage(image = img)
@@ -124,7 +127,7 @@ def handler(signum, frame):
 
 
 d = Driver()
-d.run('realsense', 'b')
+d.run('kinect', 't')
 d.root.mainloop()
 
 
