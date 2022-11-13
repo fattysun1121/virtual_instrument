@@ -24,33 +24,15 @@ from PIL import Image, ImageTk
 keep_running = True
 
 class Driver:
-	def __init__(self):
+	def __init__(self, image_holder):
 		self.introduction() 
 		self.processor = fp.FrameProcessor()
-		self.instruments = {'b': Bongos(), 't': Theremin()}
-
-
-		root = Tk()
-		root.title("Camera Feed")
-		#Graphics window
-		imageFrame = ttk.Frame(root, width=600, height=500)
-		imageFrame.grid(row=0, column=0, padx=10, pady=2)
-
-		#Capture video frames
-		lmain = ttk.Label(imageFrame)
-		lmain.grid(row=0, column=2)
-
-		# Quit buttom
-		quit_btn = ttk.Button(root, text="Quit", command=root.destroy).grid(row=1, column=2, stick=S)
-
-		self.lmain = lmain
-		self.root = root
+		self.instruments = {'b': Bongos(), 't': Theremin()}	
+		self.image_holder = image_holder
 
 	# Run the program by the input camera type 
 
 	def run(self, camera_type, instrument):
-		lmain = self.lmain
-
 		if camera_type == 'realsense':
 			import pyrealsense2.pyrealsense2 as rs
 
@@ -67,7 +49,6 @@ class Driver:
 			print('Camera not supported!')
 	
 	def update_frame_r(self, instrument):
-		lmain = self.lmain
 		frames = self.pipe.wait_for_frames()
 		color = frames.get_color_frame()
 		# Get the latest frame and convert into Image
@@ -81,16 +62,13 @@ class Driver:
 
 		# Convert image to PhotoImage
 		imgtk = ImageTk.PhotoImage(image = img)
-		lmain.imgtk = imgtk
-		lmain.configure(image=imgtk)
-		lmain.after(17, lambda : self.update_frame_r(instrument))
+		self.image_holder.imgtk = imgtk
+		self.image_holder.configure(image=imgtk)
+		self.image_holder.after(17, lambda : self.update_frame_r(instrument))
 
 	def update_frame_k(self, instrument):
 		from freenect import sync_get_depth as get_depth, sync_get_video as get_video
-
-		lmain = self.lmain
 		(depth,_), (rgb,_) = get_depth(), get_video()
-
 
 		lhand, rhand = self.processor.get_kinematics()
 
@@ -99,9 +77,9 @@ class Driver:
 
 		# Convert image to PhotoImage
 		imgtk = ImageTk.PhotoImage(image = img)
-		lmain.imgtk = imgtk
-		lmain.configure(image=imgtk)
-		lmain.after(17, lambda : self.update_frame_k(instrument))
+		self.image_holder.imgtk = imgtk
+		self.image_holder.configure(image=imgtk)
+		self.image_holder.after(17, lambda : self.update_frame_k(instrument))
 
 	
 	@staticmethod
@@ -115,9 +93,23 @@ def handler(signum, frame):
 
 
 if __name__ == '__main__':
-	d = Driver()
+	root = Tk()
+	root.title("Camera Feed")
+	#Graphics window
+	image_frame = ttk.Frame(root, width=600, height=500)
+	image_frame.grid(row=0, column=0, padx=10, pady=2)
+
+	#Capture video frames
+	image_holder = ttk.Label(image_frame)
+	image_holder.grid(row=0, column=2)
+
+	# Quit buttom
+	quit_btn = ttk.Button(root, text="Quit", command=root.destroy).grid(row=1, column=2, stick=S)
+
+
+	d = Driver(image_holder)
 	d.run('realsense', 'b')
-	d.root.mainloop()
+	root.mainloop()
 
 
 
