@@ -51,7 +51,6 @@ class Driver:
 		# Get the data and convert into an array
 		color_array = np.asanyarray(color.get_data())
 
-		
 		if self.processor.process_frame(color_array) == 0:
 			lhand, rhand = self.processor.get_kinematics()
 			self.instruments[instrument].play(lhand, rhand)
@@ -67,8 +66,8 @@ class Driver:
 		self.image_holder.after(17, lambda : self.update_frame_r(instrument))
 
 	def update_frame_k(self, instrument):
-		from freenect import sync_get_depth as get_depth, sync_get_video as get_video
-		(depth,_), (rgb,_) = get_depth(), get_video()
+		from freenect import sync_get_video as get_video
+		rgb = get_video()[0]
 
 		if self.processor.process_frame(rgb) == 0:
 			lhand, rhand = self.processor.get_kinematics()
