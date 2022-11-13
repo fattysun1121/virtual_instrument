@@ -6,6 +6,7 @@ Cal Tumminello
 
 # import tkinter as tk
 import sys
+from tkinter import OptionMenu, StringVar
 
 import cv2
 
@@ -24,8 +25,8 @@ elif (sys.platform == "win64"):
     from tkinter.ttk import *
 elif (sys.platform == 'darwin'):
     from enum import Enum
-    from tkinter import *
-    from tkinter.ttk import *
+    import tkinter as tk
+    import tkinter.ttk as ttk
 else:
     from enum import Enum
     from tkinter import Tk, Label, Frame, Toplevel, Canvas
@@ -33,23 +34,59 @@ else:
     import tkinter.ttk as ttk
     
 
+
+
+
+
+'''
+
+Defines the Classes we will use, 
+
+CLASSES: 
+
+Instruments - Enumeration for the types of instruments they will use
+
+InstrumentWindow - 
+
+'''
+
+
+
+
+
+
+'''
+
+Defines the Classes we will use, 
+
+CLASSES: 
+
+Instruments - Enumeration for the types of instruments they will use
+
+InstrumentWindow - 
+
+'''
+
+
 # enumeration for instrument type
+
+
 class Instruments(Enum):
 
     BONGOS = 1
     THERAMIN = 2
     COMPOSER = 3
 
-# Capture from camera
-feed = 0
-cap = cv2.VideoCapture(feed)
+# toplevel controller for window groups
 
 # Sets up User Interface
 class InstrumentWindow(tk.Tk):
     def __init__(self, instru=1, master=None):
-        super().__init__(master)
+        super().__init__()
         self.instrument = instru
         
+        self.dropBool = False
+
         # Rows
 
         row1 = tk.Label(master, bg='pink', text= ' ').grid(row=0, column=0)
@@ -60,15 +97,17 @@ class InstrumentWindow(tk.Tk):
 
         # Columns
         
-        col1 = tk.Label(master, bg='pink', text= ' ', justify='left').grid(row=0, column=0)
-        col2 = tk.Label(master, bg='light gray', text= ' ').grid(row=0, column=1)
-        col3 = tk.Label(master, bg='pink', text= ' ').grid(row=0, column=2)
-        col4 = tk.Label(master, bg='light gray', text= ' ').grid(row=0, column=3)
-        col5 = tk.Label(master, bg='pink', text= ' ').grid(row=0, column=4)
+        self.col1 = tk.Label(master, bg='pink', text= ' ', justify='left', height=int(self.winfo_height() / 20), width=int(self.winfo_width() / 20)).grid(row=0, column=0)
+        self.col2 = tk.Label(master, bg='light gray', text= ' ', height=int(self.winfo_height() / 20), width=int(self.winfo_width() / 20)).grid(row=0, column=1)
+        self.col3 = tk.Label(master, bg='pink', text= ' ', height=int(self.winfo_height() / 20), width=int(self.winfo_width() / 20)).grid(row=0, column=2)
+        self.col4 = tk.Label(master, bg='light gray', text= ' ', height=int(self.winfo_height() / 20), width=int(self.winfo_width() / 20)).grid(row=0, column=3)
+        self.col5 = tk.Label(master, bg='pink', text= ' ', height=int(self.winfo_height() / 20), width=int(self.winfo_width() / 40)).grid(row=0, column=4)
         
         # Other UI Widgets 
 
-        title = tk.Label(master, bg='light gray', text= 'Handstruments', font=("Times New Roman", 25)).grid(row=0, column=2)
+        self.title = tk.Label(master, bg='light gray', text= 'Handstruments', font=("Times New Roman", 25)).grid(row=0, column=2)
+        
+        self.instruButt = tk.Button(master, text="instruments", bg='pink', padx=25, pady=20).grid(row=3,column=0)
         
         # instruButt = tk.Checkbutton(master, text='Instruments', padx=50, pady=20).grid(row=3, column=0)
 
@@ -76,6 +115,8 @@ class InstrumentWindow(tk.Tk):
 
         quit_btn = tk.Button
     def set_instrument(self, instru):
+    
+    def setInstrument(self, instru):
         self.instrument = instru
 
     def get_instrument(self) -> Instruments:
@@ -101,6 +142,31 @@ class InstrumentWindow(tk.Tk):
         lmain.imgtk = imgtk
         lmain.configure(image=imgtk)
         lmain.after(1, camera_feed) 
+
+    
+    def dropDown(self):
+
+        if self.dropBool == False:
+            self.bongoButton = tk.Button(master=self, bg="pink",text='Bongos', padx=25, pady=20).grid(row=3, column=1)
+            self.guitarButton = tk.Button(master=self, bg='pink', text='Guitar', padx=25, pady=20).grid(row=4, column=1)
+            self.thereminButton = tk.Button(master=self, bg='pink', text='Theremin', padx=25, pady=20).grid(row=5, column=1)
+        else:
+            self.bongoButton = None
+            self.guitarButton = None
+            self.thereminButton = None
+
+
+
+
+
+
+window = InstrumentWindow()
+
+clicked = StringVar()
+
+drop = OptionMenu(window,clicked, "Bongos", "Guitar", "Theremin")
+
+
 
         
 
