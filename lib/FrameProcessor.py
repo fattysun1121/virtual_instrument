@@ -51,13 +51,13 @@ class FrameProcessor:
             return -1
 
         # Get new positions of right hand and left hand
-        rhand_new_px = results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.RIGHT_WRIST].x
-        rhand_new_py = results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.RIGHT_WRIST].y
-        rhand_new_pz = results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.RIGHT_WRIST].z
+        rhand_new_px = results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.RIGHT_THUMB].x
+        rhand_new_py = results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.RIGHT_THUMB].y
+        rhand_new_pz = results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.RIGHT_THUMB].z
 
-        lhand_new_px = results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.LEFT_WRIST].x
-        lhand_new_py = results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.LEFT_WRIST].y
-        lhand_new_pz = results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.LEFT_WRIST].z
+        lhand_new_px = results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.LEFT_THUMB].x
+        lhand_new_py = results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.LEFT_THUMB].y
+        lhand_new_pz = results.pose_landmarks.landmark[self.mp_pose.PoseLandmark.LEFT_THUMB].z
 
 
         # Calculate right hand kinematics
