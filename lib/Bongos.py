@@ -20,7 +20,6 @@ class Bongos(Instrument):
 
 		if lhand_py > 0.2 and lhand_py < 0.5:
 			self.lplaying = 0
-
 		if rhand_py > 0.2 and rhand_py < 0.5:
 			self.rplaying = 0
 
@@ -37,9 +36,30 @@ class Bongos(Instrument):
 			self.rplaying = 1
 			return 'right'	
 
+	def get_volume(self, lhand, rhand):
+		lhand_y_acc = lhand[2][1]
+		l_vol = abs(-1 * lhand[2][1] / 120)		# Expected acceleration for sudden stop
+		r_vol = abs(-1 * rhand[2][1] / 120)	# (determined experimentally)
+
+		if l_vol > 1:
+			l_vol = 1
+		elif l_vol < 0:
+			l_vol = 0
+
+		if r_vol > 1:
+			r_vol = 1
+		elif r_vol < 0:
+			r_vol = 0
+
+		return [l_vol, r_vol]
+
 	# Play bongos
 	def play(self, lhand, rhand):
 		hands = self.get_pitch(lhand, rhand)
+		vol = self.get_volume(lhand, rhand)
+
+		self.high_sound.set_volume(vol[0])
+		self.deep_sound.set_volume(vol[1])
 
 		if hands == 'left':	
 			self.high_sound.stop()
