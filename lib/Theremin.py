@@ -28,9 +28,9 @@ class Theremin():
             return
         else:
             self.sinewave.play()
-        print(f"X: {pitch_scale:.3f}\tLeft Hand y: {dy:.3f}")
+        print(f"X: {freq_scale:.3f}\tLeft Hand y: {dy:.3f}")
 
-        self.sinewave.set_pitch(800 * freq_scale)
+        self.sinewave.set_frequency(2000 * freq_scale)
         self.sinewave.set_volume(dy)
 
         # sampleRate = 44100
