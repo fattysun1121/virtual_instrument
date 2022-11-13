@@ -23,7 +23,6 @@ while True:
     width = color.get_width()
     height = color.get_height()
     color_array = np.asanyarray(color.get_data())
-
     
 
     # process the RGB frame to get the result

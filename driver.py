@@ -1,12 +1,18 @@
 # Driver class drives the camera, GUI, and FrameProcessor. It gives FrameProcessor the frame, and receives
 # the frame with skeletonization and the hands kinematics
 
+# Local libraries
+from lib.Bongos import Bongos
+from lib.Theremin import Theremin
+from lib import FrameProcessor as fp
+
+# Image processing
 import cv2
 import mediapipe as mp
 import numpy as np
+
+# Theremin dependencies
 import pygame
-from lib import FrameProcessor as fp
-from lib import Theremin as th
 import signal
 import sys
 
@@ -16,12 +22,10 @@ class Driver:
 	def __init__(self):
 		self.introduction() 
 		self.processor = fp.FrameProcessor()
-
+		self.instruments = {'b': Bongos(), 't': Theremin()}
 
 	# Run the program by the input camera type 
 	def run(self, camera_type):
-
-		instr = th.Theremin()
 
 		if camera_type == 'realsense':
 			import pyrealsense2.pyrealsense2 as rs
@@ -31,7 +35,6 @@ class Driver:
 			config = rs.config()
 			config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
 			pipe.start(config)
-
 			while keep_running:
 				# Get BGR frame
 
@@ -39,16 +42,19 @@ class Driver:
 				color = frames.get_color_frame()
 
 				color_array = np.asanyarray(color.get_data())
-				self.processor.process_frame(color_array)
-			
-				# show the final output
-				cv2.imshow('Output', color_array)
-			
-				rhand, lhand = self.processor.get_kinematics()
-				instr.play(rhand, lhand)
+				
 
-				if cv2.waitKey(1) == ord('q'):
-					break
+
+			    if self.processor.process_frame(color_array) == 0:
+			    	lhand, rhand = self.processor.get_kinematics()
+			    	self.instruments['b'].play(lhand, rhand)
+			    
+			    # Show the final output
+			    cv2.imshow('Output', color_array)
+			    
+			    if cv2.waitKey(1) == ord('q'):
+			        break
+
 
 			pipe.stop()
 
@@ -70,15 +76,7 @@ class Driver:
 					break
 		else:
 			print('Camera not supported!')
-		
- 
-	# Play the instrument based on the passed string arg
-	def play_instrument(self, instrument):
-		if instrument == 'b':
-			from lib import Bongos
-		elif instrument == 't':
-			from lib import Theremin
-			
+	
 	
 	@staticmethod
 	def introduction():

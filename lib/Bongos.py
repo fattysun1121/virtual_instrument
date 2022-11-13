@@ -1,39 +1,52 @@
 from .Instrument import Instrument 
-from pydub import AudioSegment
-from pydub import playback as pb
-import soundfile as sf
-
+from pygame import mixer
 
 class Bongos(Instrument):
 	def __init__(self):
-		self.high_audio = AudioSegment.from_file("./sounds/Bongo_high.wav", format="wav")
-		self.deep_audio = AudioSegment.from_file("./sounds/Bongo_deep.wav", format="wav")
-		self.mixed_audio = self.high_audio.overlay(self.deep_audio)
+		self.lplaying = 0
+		self.rplaying = 0
 
+		mixer.init()
+
+		self.high_sound = mixer.Sound("./sounds/Bongo_high.wav")
+		self.deep_sound = mixer.Sound("./sounds/Bongo_deep.wav")
+		self.mixed_sound = mixer.Sound("./sounds/Bongo_mixed.wav")
 
 	# Control which sound file to play (left hand or right hand)
 	# Use accelaration and position to decide whether play sound or not
-	def get_pitch(self):
-		pass
+	def get_pitch(self, lhand, rhand):
+		lhand_py = lhand[0][1]
+		rhand_py = rhand[0][1]
 
+		if lhand_py > 0.2 and lhand_py < 0.5:
+			self.lplaying = 0
 
+		if rhand_py > 0.2 and rhand_py < 0.5:
+			self.rplaying = 0
 
-	# Use velocity before hitting area to decide the volume
-	def get_volume(self):
-		pass
+		if self.lplaying == 0 and self.rplaying == 0 and lhand_py > 0.6 and rhand_py > 0.6:
+			self.lplaying = 1
+			self.rplaying = 1
+			return 'left and right'
+
+		if self.lplaying == 0 and lhand_py > 0.6:
+			self.lplaying = 1
+			return 'left'
+		
+		if self.rplaying == 0 and rhand_py > 0.6:
+			self.rplaying = 1
+			return 'right'	
 
 	# Play bongos
-	def play(self):
-		hands = self.get_pitch()
-		if hands == 'left':
-			pb.play(self.high_audio)
+	def play(self, lhand, rhand):
+		hands = self.get_pitch(lhand, rhand)
+
+		if hands == 'left':	
+			self.high_sound.stop()
+			self.high_sound.play()
 		elif hands == 'right':
-			pb.play(self.deep_audio)
+			self.deep_sound.stop()
+			self.deep_sound.play()	
 		elif hands == 'left and right':
-			pb.play(self.mixed_audio)
-
-b = Bongos()
-b.play()
-
-	
-	
+			self.mixed_sound.stop()
+			self.mixed_sound.play()

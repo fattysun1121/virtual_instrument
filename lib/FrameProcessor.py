@@ -33,8 +33,8 @@ class FrameProcessor:
     #    Velocity:      (vx, vy, vz),
     #    Acceleration:  (ax, ay, az))
     def get_kinematics(self, hand="BOTH"):
-        a1 = [self.rhand_position, self.rhand_velocity, self.rhand_accel]
-        a2 = [self.lhand_position, self.lhand_velocity, self.lhand_accel]
+        a1 = [self.lhand_position, self.lhand_velocity, self.lhand_accel]
+        a2 = [self.rhand_position, self.rhand_velocity, self.rhand_accel]
         return a1, a2
 
     # Processes camera frames
