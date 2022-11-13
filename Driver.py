@@ -45,15 +45,15 @@ class Driver:
 				
 
 
-			    if self.processor.process_frame(color_array) == 0:
-			    	lhand, rhand = self.processor.get_kinematics()
-			    	self.instruments[instrument].play(lhand, rhand)
+				if self.processor.process_frame(color_array) == 0:
+					lhand, rhand = self.processor.get_kinematics()
+					self.instruments[instrument].play(lhand, rhand)
+				
+				# Show the final output
+				cv2.imshow('Output', color_array)
 			    
-			    # Show the final output
-			    cv2.imshow('Output', color_array)
-			    
-			    if cv2.waitKey(1) == ord('q'):
-			        break
+				if cv2.waitKey(1) == ord('q'):
+					break
 
 
 			pipe.stop()
