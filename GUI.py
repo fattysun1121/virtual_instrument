@@ -19,7 +19,7 @@ elif (sys.platform == "win64"):
 elif (sys.platform == 'darwin'):
     from enum import Enum
     from tkinter import *
-    from tkinter.ttk import *
+    from tkinter import ttk
 else:
     from enum import Enum
     from tkinter import Tk, Label, Frame, Toplevel, Canvas
