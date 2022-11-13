@@ -41,10 +41,8 @@ def Life_feed():
 
 root = Tk()
 root.title("Camera Feed")
-label = ttk.Label(root)
-label.grid(row=0, column=0)
+
 cap = cv2.VideoCapture(0)
-recording = False
 
 #Graphics window
 imageFrame = ttk.Frame(root, width=600, height=500)
@@ -54,7 +52,6 @@ imageFrame.grid(row=0, column=0, padx=10, pady=2)
 lmain = ttk.Label(imageFrame)
 lmain.grid(row=0, column=2)
 
-
 # Define function to show frame
 def show_feed():
     # Get the latest frame and convert into Image
@@ -63,14 +60,6 @@ def show_feed():
 
     # Convert image to PhotoImage
     imgtk = ImageTk.PhotoImage(image = img)
-    label.imgtk = imgtk
-    label.configure(image=imgtk)
-
-    ret, frame = cap.read()
-    frame = cv2.flip(frame, 1)
-    cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
-    img = Image.fromarray(cv2image)
-    imgtk = ImageTk.PhotoImage(image=img)
     lmain.imgtk = imgtk
     lmain.configure(image=imgtk)
     lmain.after(10, show_feed)
