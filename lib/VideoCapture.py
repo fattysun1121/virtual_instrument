@@ -43,11 +43,8 @@ root = Tk()
 root.title("Camera Feed")
 label = ttk.Label(root)
 label.grid(row=0, column=0)
-cap= cv2.VideoCapture(0)
-
-# Define the codec and create VideoWriter object
-fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter('output.avi', fourcc, 20.0, (640, 480))
+cap = cv2.VideoCapture(0)
+recording = False
 
 #Graphics window
 imageFrame = ttk.Frame(root, width=600, height=500)
@@ -77,32 +74,14 @@ def show_feed():
     lmain.imgtk = imgtk
     lmain.configure(image=imgtk)
     lmain.after(10, show_feed)
-    
-def take_video() -> bool:
-    # This will return video from the first webcam on your computer.
-    while(True):
-        # loop runs if capturing has been initialized. 
-        # reads frames from a camera 
-        # ret checks return at each frame
-        ret, frame = cap.read() 
-        cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
-
-        # output the frame
-        out.write(cv2image) 
-    
-
-def stop_video():
-    out.release()
-    cap.release()
-    cv2.destroyAllWindows()
 
 # Repeat after an interval to capture continiously
 lmain.after(20, show_feed)
-record_btn = ttk.Button(root, text='Record', command=take_video).grid(row=1, column=1, sticky=W)
+
 quit_btn = ttk.Button(root, text="Quit", command=root.destroy).grid(row=1, column=2, stick=S)
 
-if (take_video):
-    stop_btn = ttk.Button(root, text='Stop', command=stop_video).grid(row=1, column=3, sticky=E)
+
+    
 
 root.mainloop()
 
