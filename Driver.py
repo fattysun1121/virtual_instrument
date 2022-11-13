@@ -44,19 +44,24 @@ class Driver:
 			print('Camera not supported!')
 	
 	def update_frame_r(self, instrument):
+		# Get BGR frame from pipeline
 		frames = self.pipe.wait_for_frames()
 		color = frames.get_color_frame()
-		# Get the latest frame and convert into Image
+
+		# Get the data and convert into an array
 		color_array = np.asanyarray(color.get_data())
+
+		
 		if self.processor.process_frame(color_array) == 0:
 			lhand, rhand = self.processor.get_kinematics()
 			self.instruments[instrument].play(lhand, rhand)
+
 		cv2image= cv2.cvtColor(color_array, cv2.COLOR_BGR2RGB)
 
 		img = Image.fromarray(cv2image)
 
 		# Convert image to PhotoImage
-		imgtk = ImageTk.PhotoImage(image = img)
+		imgtk = ImageTk.PhotoImage(image=img)
 		self.image_holder.imgtk = imgtk
 		self.image_holder.configure(image=imgtk)
 		self.image_holder.after(17, lambda : self.update_frame_r(instrument))
@@ -65,13 +70,14 @@ class Driver:
 		from freenect import sync_get_depth as get_depth, sync_get_video as get_video
 		(depth,_), (rgb,_) = get_depth(), get_video()
 
-		lhand, rhand = self.processor.get_kinematics()
+		if self.processor.process_frame(rgb) == 0:
+			lhand, rhand = self.processor.get_kinematics()
+			self.instruments[instrument].play(lhand, rhand)
 
-		self.instruments[instrument].play(lhand, rhand)
 		img = Image.fromarray(rgb)
 
 		# Convert image to PhotoImage
-		imgtk = ImageTk.PhotoImage(image = img)
+		imgtk = ImageTk.PhotoImage(image=img)
 		self.image_holder.imgtk = imgtk
 		self.image_holder.configure(image=imgtk)
 		self.image_holder.after(17, lambda : self.update_frame_k(instrument))
