@@ -10,7 +10,6 @@ class Theremin():
         self.pitch_rod_z = -0.8
         self.vol_rod_y   = 0.8
         self.sinewave = SineWave(pitch = 0, pitch_per_second = 50, decibels_per_second=50)
-        self.sinewave.play()
     
     def get_pitch(self, lhand, rhand):
         sampleRate = 44100
