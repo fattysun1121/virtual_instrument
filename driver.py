@@ -26,6 +26,7 @@ class Driver:
 
 	# Run the program by the input camera type 
 	def run(self, camera_type):
+
 		if camera_type == 'realsense':
 			import pyrealsense2.pyrealsense2 as rs
 
@@ -36,13 +37,13 @@ class Driver:
 			pipe.start(config)
 			while keep_running:
 				# Get BGR frame
-			    frames = pipe.wait_for_frames()
-			    color = frames.get_color_frame()
 
-			    if not color: continue
+				frames = pipe.wait_for_frames()
+				color = frames.get_color_frame()
 
-			    color_array = np.asanyarray(color.get_data())
-			    
+				color_array = np.asanyarray(color.get_data())
+				
+
 
 			    if self.processor.process_frame(color_array) == 0:
 			    	lhand, rhand = self.processor.get_kinematics()
@@ -54,6 +55,7 @@ class Driver:
 			    if cv2.waitKey(1) == ord('q'):
 			        break
 
+
 			pipe.stop()
 
 		elif camera_type == 'kinect':
@@ -61,6 +63,7 @@ class Driver:
 
 			while keep_running:
 				(depth,_), (rgb,_) = get_depth(), get_video()
+
 				self.processor.process_frame(rgb)
 
 				cv2.imshow('Output', rgb[:, :, ::-1])
@@ -88,10 +91,10 @@ def handler(signum, frame):
 if __name__ == "__main__":
 	if (len(sys.argv) < 2):
 		print("Usage: python driver.py [kinect | realsense]")
-		pass
-	signal.signal(signal.SIGINT, handler)
-	driver = Driver()
-	driver.run(sys.argv[1])
+	else:
+		signal.signal(signal.SIGINT, handler)
+		driver = Driver()
+		driver.run(sys.argv[1])
 
 
 
