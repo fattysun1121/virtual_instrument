@@ -9,9 +9,8 @@ class Theremin():
         self.pitch_rod_x = 0.1
         self.pitch_rod_z = -0.8
         self.vol_rod_y   = 0.8
-
         self.sinewave = SineWave(pitch = 0, pitch_per_second = 10, decibels_per_second=10)
-        self.sinewave.play()
+     
 
     def __calc_pitch_linear_distance(self, x, z):
         return math.sqrt(math.pow((x - self.pitch_rod_x), 2) + math.pow((z - self.pitch_rod_z), 2))
